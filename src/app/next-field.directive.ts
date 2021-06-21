@@ -1,4 +1,10 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  NgModule
+} from '@angular/core';
 import { UnaryFunction } from 'rxjs';
 
 @Directive({
@@ -6,12 +12,14 @@ import { UnaryFunction } from 'rxjs';
 })
 export class NextFieldDirective {
   constructor(private el: ElementRef) {}
-  @Input() maxlength = 0;
   @Input('appNextField') nextFieldId = '';
-  @Input() nextFieldWhen: UnaryFunction<ElementRef, boolean> = el => {
+  @Input() nextFieldWhen: UnaryFunction<ElementRef, boolean> =
+    NextFieldDirective.MaxLengthValidator;
+
+  public static MaxLengthValidator(el: ElementRef): boolean {
     const nat = el.nativeElement;
     return nat.value && nat.value.length == nat.maxLength;
-  };
+  }
 
   @HostListener('keyup') OnKeyUp() {
     if (!this.nextFieldWhen) {
@@ -29,15 +37,14 @@ export class NextFieldDirective {
     }
   }
 
-  getNearParentSelector(element: any, selector: string) {
+  private getNearParentSelector(element: any, selector: string) {
     const n = element.querySelector(selector);
     if (n) return n;
     return this.getNearParentSelector(element.parentElement, selector);
   }
 
-  focusNext() {
+  private focusNext() {
     let element: any;
-    debugger;
     if (this.nextFieldId) {
       element = this.getNearParentSelector(
         this.el.nativeElement,
@@ -52,3 +59,10 @@ export class NextFieldDirective {
     }
   }
 }
+
+@NgModule({
+  imports: [],
+  declarations: [NextFieldDirective],
+  exports: [NextFieldDirective]
+})
+export class NextFieldDirectiveModule {}
