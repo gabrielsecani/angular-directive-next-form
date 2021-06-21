@@ -1,0 +1,19 @@
+<form [formGroup]="profileForm">
+
+  <label for="first-name">First Name: </label>
+  <input id="first-name" type="text" appNextField="#last-name" formControlName="firstName" maxlength="3">
+
+  <label for="last-name">Last Name: </label>
+  <input id="last-name" type="text" appNextField formControlName="lastName" maxlength="4">
+
+  <label for="other-name">Other Name: </label>
+  <input id="other-name" type="text" appNextField formControlName="otherName">
+
+</form>
+
+<hr>
+
+<p>Form Value: {{ profileForm.value | json }}</p>
+
+<p>Form Status: {{ profileForm.status }}</p>
+<button [disabled]="!profileForm.dirty || profileForm.invalid " >Go</button>
